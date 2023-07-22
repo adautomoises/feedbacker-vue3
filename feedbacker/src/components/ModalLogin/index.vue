@@ -85,7 +85,6 @@ export default {
       useField("password", validateEmptyAndLength3);
 
     const state = reactive({
-      hasErrors: false,
       isLoading: false,
       email: {
         value: emailValue,
@@ -101,34 +100,20 @@ export default {
       try {
         toast.clear();
         state.isLoading = true;
-        const { data, errors } = await services.auth.login({
+        const { data, error } = await services.auth.login({
           email: state.email.value,
           password: state.password.value,
         });
-
-        if (!errors) {
-          window.localStorage.setItem("@feedbacker:token", data.token);
-          router.push({ name: "Feedbacks" });
-          state.isLoading = false;
-          modal.close();
-          return;
+        if (error) {
+          return toast.error(error);
         }
-
-        if (errors.status === 404) {
-          toast.error("E-mail não encontrado");
-        }
-        if (errors.status === 401) {
-          toast.error("E-mail/senha inválidos");
-        }
-        if (errors.status === 400) {
-          toast.error("Ocorreu um erro ao fazer o login");
-        }
-
-        state.isLoading = false;
+        window.localStorage.setItem("@feedbacker:token", data.token);
+        router.push({ name: "Feedbacks" });
+        modal.close();
       } catch (error) {
+        toast.error("Ocorreu um erro...");
+      } finally {
         state.isLoading = false;
-        state.hasErrors = !!error;
-        toast.error("Ocorreu um erro ao fazer o login");
       }
     }
 
