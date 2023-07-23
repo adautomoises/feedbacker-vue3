@@ -24,7 +24,7 @@
           >{{ state.email.errorMessage }}</span
         >
       </label>
-      <label class="block"
+      <label class="block mt-2"
         ><span class="text-lg font-medium text-gray-800">Senha</span>
         <input
           v-model="state.password.value"

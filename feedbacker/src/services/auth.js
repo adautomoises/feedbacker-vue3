@@ -28,4 +28,15 @@ export default (httpClient) => ({
       error,
     };
   },
+  register: async ({ name, email, password }) => {
+    const response = await httpClient.post("/auth/register", {
+      name,
+      email,
+      password,
+    });
+
+    return {
+      data: response.data,
+    };
+  },
 });
