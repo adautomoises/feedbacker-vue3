@@ -94,8 +94,10 @@ export default {
     const modal = useModal();
     const toast = useToast();
 
-    const { value: nameValue, errorMessage: nameErrorMessage } =
-      useField("name");
+    const { value: nameValue, errorMessage: nameErrorMessage } = useField(
+      "name",
+      validateEmptyAndLength3
+    );
     const { value: emailValue, errorMessage: emailErrorMessage } = useField(
       "email",
       validateEmptyAndEmail
@@ -119,9 +121,18 @@ export default {
       },
     });
 
+    async function login({ email, password }) {
+      const { data } = await services.auth.login({
+        email,
+        password,
+      });
+      window.localStorage.setItem("@feedbacker:token", data.token);
+      router.push({ name: "Feedbacks" });
+      modal.close();
+    }
+
     async function handleSubmit() {
       try {
-        console.log(state);
         toast.clear();
         state.isLoading = true;
         const { data } = await services.auth.register({
@@ -130,12 +141,15 @@ export default {
           password: state.password.value,
         });
 
-        console.log(data);
-        // window.localStorage.setItem("@feedbacker:token", data.token);
-        // router.push({ name: "Feedbacks" });
-        modal.close();
+        if (data) {
+          await login({
+            email: state.email.value,
+            password: state.password.value,
+          });
+          return;
+        }
       } catch (error) {
-        toast.error("Ocorreu um erro...");
+        toast.error("Ocorreu um erro ao criar conta...");
       } finally {
         state.isLoading = false;
       }
