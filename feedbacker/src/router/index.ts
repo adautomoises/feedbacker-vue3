@@ -7,7 +7,7 @@ const Credentials = () => import("../views/Credentials/index.vue");
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "home",
+    name: "Home",
     component: Home,
   },
   {
@@ -19,8 +19,8 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/credentials",
-    name: "Credentials",
+    path: "/credenciais",
+    name: "Credenciais",
     component: Credentials,
     meta: { hasAuth: true },
   },

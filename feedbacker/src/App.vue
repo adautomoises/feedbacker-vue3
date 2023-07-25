@@ -22,7 +22,7 @@ export default {
           const token = window.localStorage.getItem("@feedbacker:token");
 
           if (!token) {
-            router.push({ path: "/" });
+            router.push({ name: "Home" });
             return;
           }
 
